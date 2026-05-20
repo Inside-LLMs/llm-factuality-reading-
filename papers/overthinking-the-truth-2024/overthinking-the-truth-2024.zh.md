@@ -1,5 +1,5 @@
 ---
-title: OVERTHINKING THE TRUTH：理解语言模型如何处理错误演示
+title: "OVERTHINKING THE TRUTH：理解语言模型如何处理错误演示"
 authors: Halawi 等
 year: 2024
 venue: ICLR 2024

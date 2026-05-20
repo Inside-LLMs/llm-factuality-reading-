@@ -19,7 +19,7 @@ The repository is organized so that each paper lives in its own folder inside `p
 
 ### Decoding / Inference-time Methods
 
-- [DoLa: Decoding by Contrasting Layers Improves Factuality in Large Language Models (ICLR 2024)](papers/dola-2024/dola-2024.md)
+- [DoLa: Decoding by Contrasting Layers Improves Factuality in Large Language Models (ICLR 2024)](papers/dola-2024/dola-2024.md) / [中文](papers/dola-2024/dola-2024.zh.md)
 - [In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation (2024)](papers/in-context-sharpness-2024/in-context-sharpness-2024.md) / [中文](papers/in-context-sharpness-2024/in-context-sharpness-2024.zh.md)
 - [Monitoring Decoding: Mitigating Hallucination via Evaluating the Factuality of Partial Response during Generation (ACL 2025)](papers/monitoring-decoding-2025/monitoring-decoding-2025.md) / [中文](papers/monitoring-decoding-2025/monitoring-decoding-2025.zh.md)
 

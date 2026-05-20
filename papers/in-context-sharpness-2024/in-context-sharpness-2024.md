@@ -1,5 +1,5 @@
 ---
-title: In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation
+title: "In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation"
 authors: Chen 等
 year: 2024
 venue: 2024

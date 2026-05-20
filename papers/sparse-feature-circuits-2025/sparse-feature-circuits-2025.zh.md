@@ -1,5 +1,5 @@
 ---
-title: Sparse Feature Circuits: Discovering and Editing Interpretable Causal Graphs in Language Models
+title: "Sparse Feature Circuits: Discovering and Editing Interpretable Causal Graphs in Language Models"
 authors: Marks 等
 year: 2025
 venue: ICLR 2025

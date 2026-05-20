@@ -1,5 +1,5 @@
 ---
-title: In-Context Sharpness as Alerts：一种从内部表示视角缓解幻觉的方法
+title: "In-Context Sharpness as Alerts：一种从内部表示视角缓解幻觉的方法"
 authors: Chen 等
 year: 2024
 venue: 2024

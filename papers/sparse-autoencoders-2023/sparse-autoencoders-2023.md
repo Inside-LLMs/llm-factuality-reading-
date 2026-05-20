@@ -1,5 +1,5 @@
 ---
-title: Sparse Autoencoders Find Highly Interpretable Features in Language Models
+title: "Sparse Autoencoders Find Highly Interpretable Features in Language Models"
 authors: Cunningham et al.
 year: 2023
 venue: 2023

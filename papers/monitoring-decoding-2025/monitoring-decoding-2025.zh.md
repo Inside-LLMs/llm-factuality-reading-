@@ -1,5 +1,5 @@
 ---
-title: Monitoring Decoding: Mitigating Hallucination via Evaluating the Factuality of Partial Response during Generation
+title: "Monitoring Decoding: Mitigating Hallucination via Evaluating the Factuality of Partial Response during Generation"
 authors: Chang 等
 year: 2025
 venue: ACL 2025
