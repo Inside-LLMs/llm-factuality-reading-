@@ -1,25 +1,13 @@
----
-title: "Sparse Autoencoders Find Highly Interpretable Features in Language Models"
-authors: Cunningham et al.
-year: 2023
-venue: 2023
-keywords:
-  - sparse autoencoders
-  - interpretable features
-  - mechanistic interpretability
-  - superposition
-status: draft
----
-
 # Sparse Autoencoders Find Highly Interpretable Features in Language Models
+*2023*
 
 ## 1. Problem: why are neurons uninterpretable?
 
 Earlier mechanistic interpretability assumed:
 
-\[
-\text{Neuron} = \text{Feature}
-\]
+
+Neuron = Feature
+
 
 But many neurons are polysemantic, showing mixtures like:
 
@@ -32,15 +20,15 @@ This phenomenon is called polysemanticity.
 
 The authors argue the cause is not a "bad neuron" but superposition:
 
-\[
-N_{\text{feature}} > N_{\text{dimension}}
-\]
+
+N_feature > N_dimension
+
 
 So the model must compress:
 
-\[
-\text{Many Features} \rightarrow \text{Few Dimensions}
-\]
+
+Many Features → Few Dimensions
+
 
 Multiple features share a direction, creating superposition.
 
@@ -56,25 +44,25 @@ polysemantic neuron = projection(superposed features)
 
 Let residual activation be:
 
-\[
-x \in \mathbb{R}^d
-\]
+
+x in mathbbR^d
+
 
 True features are:
 
-\[
-g_1, g_2, \dots, g_n
-\]
+
+g_1, g_2, dots, g_n
+
 
 We want:
 
-\[
-x = \sum_i a_i g_i
-\]
 
-with sparse coefficients \(a_i\):
+x = sum_i a_i g_i
 
-most \(a_i = 0\)
+
+with sparse coefficients a_i:
+
+most a_i = 0
 
 Only a few features fire for a given activation.
 
@@ -88,19 +76,19 @@ The authors train a sparse autoencoder over model activations.
 
 Encoder:
 
-\[
-c = \text{ReLU}(Mx + b)
-\]
+
+c = ReLU(Mx + b)
+
 
 Decoder:
 
-\[
-\hat x = M^T c
-\]
 
-Here \(c\) is not a hidden state but a feature activation vector.
+hat x = M^T c
 
-That is, \(c\) represents interpretable features.
+
+Here c is not a hidden state but a feature activation vector.
+
+That is, c represents interpretable features.
 
 ---
 
@@ -108,25 +96,25 @@ That is, \(c\) represents interpretable features.
 
 The objective reconstructs activations while encouraging sparsity:
 
-\[
-L(x) = \|x - \hat x\|_2^2 + \alpha \|c\|_1
-\]
+
+L(x) = ||x - hat x||_2^2 + alpha ||c||_1
+
 
 Reconstruction loss:
 
-\[
-\|x - \hat x\|^2
-\]
+
+||x - hat x||^2
+
 
 Sparsity loss:
 
-\[
-\alpha \|c\|_1
-\]
 
-As \(\alpha\) increases, features become sparser but reconstruction degrades.
+alpha ||c||_1
 
-The paper observes a smooth tradeoff with no single best \(\alpha\).
+
+As alpha increases, features become sparser but reconstruction degrades.
+
+The paper observes a smooth tradeoff with no single best alpha.
 
 ---
 
@@ -194,9 +182,9 @@ and whether the model predicts Bob or Alice.
 
 They perform activation patching by replacing feature activations:
 
-\[
-c_i \rightarrow \bar c_i
-\]
+
+c_i → c_bar_i
+
 
 and observe output changes.
 
@@ -267,7 +255,7 @@ Neuron = feature
 Now:
 
 ```text
-Feature \neq neuron
+Feature ≠ neuron
 Feature = sparse direction
 Neuron = mixture(feature)
 ```
@@ -277,11 +265,11 @@ This is one of the biggest shifts in mechanistic interpretability.
 The later Anthropic line of work builds on this path:
 
 Toy Models of Superposition
-\rightarrow SAE
-\rightarrow Monosemantic Features
-\rightarrow Feature Steering
-\rightarrow Circuit Discovery
-\rightarrow Model Editing
+→ SAE
+→ Monosemantic Features
+→ Feature Steering
+→ Circuit Discovery
+→ Model Editing
 
 ---
 

@@ -1,17 +1,5 @@
----
-title: "Monitoring Decoding: Mitigating Hallucination via Evaluating the Factuality of Partial Response during Generation"
-authors: Chang 等
-year: 2025
-venue: ACL 2025
-keywords:
-  - decoding monitoring
-  - partial response evaluation
-  - hallucination mitigation
-  - tree search
-status: draft
----
-
 # Monitoring Decoding: Mitigating Hallucination via Evaluating the Factuality of Partial Response during Generation
+*ACL 2025*
 
 ## 1. 论文要解决什么问题？
 
@@ -25,9 +13,9 @@ status: draft
 
 这些方法需要：
 
-\[
-Generate\\ multiple\\ full\\ responses
-\]
+
+Generate multiple full responses
+
 
 导致：
 
@@ -51,11 +39,11 @@ Generate\\ multiple\\ full\\ responses
 
 即：
 
-\[
-Few\\ critical\\ tokens
-\\Rightarrow
+
+Few critical tokens
+→
 Hallucination
-\]
+
 
 很多 token 属于：
 
@@ -65,13 +53,13 @@ easy tokens
 
 真正危险的是：
 
-\[
-small\\ number\\ of\\ difficult\\ tokens
-\]
+
+small number of difficult tokens
+
 
 因此目标变成：
 
-> 实时找出危险 token  
+> 实时找出危险 token 
 > 只修改这些 token
 
 而不是：
@@ -156,41 +144,41 @@ Continue
 
 输入：
 
-\[
-x=\{x_1,\dots,x_T\}
-\]
+
+x=x_1,dots,x_T
+
 
 基础模型：
 
-\[
-f_\theta
-\]
 
-第 \(t\) 步生成：
+f_theta
 
-\[
+
+第 t 步生成：
+
+
 y^t
 =
-f_\theta\(
+f_theta
 x, 
-y^1, \\dots, 
-y^{t-1}
-\)
-\]
+y^1, dots, 
+y^t-1
+
+
 
 其中：
 
-\[
+
 y^t
 =
-\(y_1^t,\dots,y_m^t\)
-\]
+y_1^t,dots,y_m^t
+
 
 一次生成：
 
-\[
+
 m
-\]
+
 
 个 token。
 
@@ -204,9 +192,9 @@ reference model
 
 记：
 
-\[
+
 f^*
-\]
+
 
 通常：
 
@@ -216,31 +204,31 @@ reference model 更大
 
 定义：
 
-\[
-r_\beta
-(y^t\|x,y^{<t})
+
+r_beta
+(y^t||x,y^<t)
 =
-\sum_{s=1}^{m}
+sum_s=1^m
  w_s^t
-\cdot
-\frac{
- p^*(y_s^t\|y^{<t},y_{<s}^t)
-}{
- p_\theta(y_s^t\|y^{<t},y_{<s}^t)
-}
-\]
+·
+frac
+ p^*(y_s^t||y^<t,y_<s^t)
+
+ p_theta(y_s^t||y^<t,y_<s^t)
+
+
 
 其中：
 
-\[
+
 w_s^t
 =
-\frac{
+(
 1
-}{
-\|(y^{<t},y_{<s}^t)\|
-}
-\]
+)/(
+||(y^<t),y_<s^t)||
+
+
 
 越早 token：
 
@@ -254,24 +242,24 @@ w_s^t
 
 基础模型：
 
-\[
-p_\theta
-\\uparrow
-\]
+
+p_theta
+uparrow
+
 
 参考模型：
 
-\[
+
 p^*
-\\uparrow
-\]
+uparrow
+
 
 因此：
 
-\[
-r_\beta
-\\uparrow
-\]
+
+r_beta
+uparrow
+
 
 安全。
 
@@ -279,35 +267,35 @@ r_\beta
 
 模型很自信：
 
-\[
-p_\theta
-\\uparrow
-\]
+
+p_theta
+uparrow
+
 
 参考模型：
 
-\[
+
 p^*
-\\downarrow
-\]
+downarrow
+
 
 因此：
 
-\[
-r_\beta
-\\downarrow
-\]
+
+r_beta
+downarrow
+
 
 危险。
 
 核心：
 
-\[
-Low\\
- r_\beta
-\\Rightarrow
+
+Low
+ r_beta
+→
 Hallucination
-\]
+
 
 ---
 
@@ -315,29 +303,29 @@ Hallucination
 
 接受概率：
 
-\[
-p(accept\ y^t)
+
+p(accept y^t)
 =
-\min\{1, 
-r_\beta\}
-\]
+min1, 
+r_beta
+
 
 阈值：
 
-\[
-\gamma^t
+
+gamma^t
 =
-\gamma_0
-\sum_s
+gamma_0
+sum_s
  w_s^t
-\]
+
 
 若：
 
-\[
-r_\beta
->\gamma^t
-\]
+
+r_beta
+>gamma^t
+
 
 接受。
 
@@ -347,10 +335,10 @@ r_\beta
 
 即：
 
-\[
-r_\beta
-<\gamma^t
-\]
+
+r_beta
+<gamma^t
+
 
 ↓
 
@@ -368,17 +356,17 @@ Trigger revision
 
 采样：
 
-\[
-Top\text{-}N
-\]
+
+Top-N
+
 
 candidate tokens
 
 形成：
 
-\[
+
 N^m
-\]
+
 
 路径。
 
@@ -386,23 +374,23 @@ N^m
 
 保留：
 
-\[
-Top\text{-}K
-\]
+
+Top-K
+
 
 monitor score 最大路径：
 
-\[
-TopK(r_\beta)
-\]
+
+TopK(r_beta)
+
 
 最终：
 
 选择：
 
-\[
-argmax\\ r_\beta
-\]
+
+argmax r_beta
+
 
 作为修正 token。
 
@@ -416,8 +404,8 @@ Prompt
 
 Generate：
 
-\[
-m\]
+
+m
 
 tokens
 
@@ -425,17 +413,17 @@ tokens
 
 计算：
 
-\[
-r_\beta
-\]
+
+r_beta
+
 
 ↓
 
 若：
 
-\[
-r_\beta>\gamma
-\]
+
+r_beta>gamma
+
 
 Accept
 
@@ -469,23 +457,23 @@ Llama-2：
 
 Greedy：
 
-\[
+
 Truth*Info
 =
 37.9
-\]
+
 
 MD：
 
-\[
+
 44.1
-\]
+
 
 提升：
 
-\[
+
 +6.2
-\]
+
 
 ---
 
@@ -493,21 +481,21 @@ Gemma-2：
 
 Greedy：
 
-\[
+
 43.6
-\]
+
 
 MD：
 
-\[
+
 50.2
-\]
+
 
 提升：
 
-\[
+
 +6.6
-\]
+
 
 ---
 
@@ -515,9 +503,9 @@ MD：
 
 约：
 
-\[
+
 +9.2
-\]
+
 
 ---
 
@@ -527,33 +515,33 @@ Llama-3：
 
 TriviaQA：
 
-\[
+
 72.4
-\\rightarrow
+→
 80.8
-\]
+
 
 提升：
 
-\[
+
 +8.4
-\]
+
 
 ---
 
 NQ-open：
 
-\[
+
 39.6
-\\rightarrow
+→
 47.4
-\]
+
 
 提升：
 
-\[
+
 +6.8
-\]
+
 
 ---
 
@@ -561,17 +549,17 @@ Gemma-2：
 
 TriviaQA：
 
-\[
+
 54.0
-\\rightarrow
+→
 64.6
-\]
+
 
 提升：
 
-\[
+
 +10.6
-\]
+
 
 ---
 
@@ -579,33 +567,33 @@ TriviaQA：
 
 Llama-3：
 
-\[
+
 81.4
-\\rightarrow
+→
 85.2
-\]
+
 
 提升：
 
-\[
+
 +3.8
-\]
+
 
 ---
 
 Gemma-2：
 
-\[
+
 60.9
-\\rightarrow
+→
 79.9
-\]
+
 
 提升：
 
-\[
+
 +19.0
-\]
+
 
 说明：
 
@@ -620,23 +608,23 @@ Latency：
 
 Greedy：
 
-\[
+
 19.94
-\mathrm{ms/token}
-\]
+ms/token
+
 
 MD：
 
-\[
+
 113.78
-\mathrm{ms/token}
-\]
+ms/token
+
 
 约：
 
-\[
-5.7\\times
-\]
+
+5.7times
+
 
 ---
 
@@ -644,15 +632,15 @@ MD：
 
 USC：
 
-\[
-12.3\\times
-\]
+
+12.3times
+
 
 FSC：
 
-\[
-15.9\\times
-\]
+
+15.9times
+
 
 MD 更快。
 
@@ -667,17 +655,17 @@ MD 更快。
 
 增加：
 
-\[
+
 N
-\]
+
 
 性能提高。
 
 但：
 
-\[
+
 N>6
-\]
+
 
 收益趋于饱和。
 
@@ -685,9 +673,9 @@ N>6
 
 阈值：
 
-\[
-\gamma_0
-\]
+
+gamma_0
+
 
 变化影响较小，
 说明方法稳定。
@@ -706,9 +694,9 @@ Llama-3：
 
 仅：
 
-\[
-17.9\\%
-\]
+
+17.9%
+
 
 token 被修改。
 
@@ -743,11 +731,11 @@ token 被修改。
 
 即：
 
-\[
-Missing\\ knowledge
-\\Rightarrow
-No\\ correction
-\]
+
+Missing knowledge
+→
+No correction
+
 
 未来：
 
@@ -761,36 +749,36 @@ external knowledge
 
 问题：
 
-\[
+
 Hallucination
-\]
+
 
 观察：
 
-\[
-Few\\ critical\\ tokens
-\\Rightarrow
+
+Few critical tokens
+→
 Hallucination
-\]
+
 
 检测：
 
-\[
-r_\beta
+
+r_beta
 =
-\sum
+sum
  w
- \\\frac{p^*}{p_\theta}
-\]
+ (p^*)/(p_theta)
+
 
 规则：
 
-\[
-r_\beta
-<\gamma
-\\Rightarrow
+
+r_beta
+<gamma
+→
 Reject
-\]
+
 
 修正：
 
@@ -810,6 +798,6 @@ Replace token
 
 核心：
 
-> 不重采样完整回答  
-> 只修正危险 token  
+> 不重采样完整回答 
+> 只修正危险 token 
 > 提升 factuality + 降低成本

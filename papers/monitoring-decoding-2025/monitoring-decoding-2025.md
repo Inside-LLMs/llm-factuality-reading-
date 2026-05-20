@@ -1,17 +1,5 @@
----
-title: "Monitoring Decoding: Mitigating Hallucination via Evaluating the Factuality of Partial Response during Generation"
-authors: Chang et al.
-year: 2025
-venue: ACL 2025
-keywords:
-  - decoding monitoring
-  - partial response evaluation
-  - hallucination mitigation
-  - tree search
-status: draft
----
-
 # Monitoring Decoding: Mitigating Hallucination via Evaluating the Factuality of Partial Response during Generation
+*ACL 2025*
 
 ## 1. What problem does the paper solve?
 
@@ -25,9 +13,9 @@ Problem:
 
 These methods require:
 
-\[
-\text{Generate multiple full responses}
-\]
+
+Generate multiple full responses
+
 
 This leads to:
 
@@ -37,7 +25,7 @@ This leads to:
 
 The authors ask:
 
-> Must we resample complete responses?  
+> Must we resample complete responses? 
 > Can we correct only the critical tokens that cause hallucination?
 
 ---
@@ -48,21 +36,21 @@ The authors find that only a small number of critical tokens cause the final hal
 
 That is:
 
-\[
-\text{Few critical tokens} \Rightarrow \text{Hallucination}
-\]
+
+Few critical tokens → Hallucination
+
 
 Many tokens are easy and stable, and do not affect factuality.
 
 The real danger comes from:
 
-\[
-\text{small number of difficult tokens}
-\]
+
+small number of difficult tokens
+
 
 Thus the goal becomes:
 
-> detect dangerous tokens in real time  
+> detect dangerous tokens in real time 
 > revise only those tokens
 
 instead of:
@@ -126,32 +114,32 @@ Continue
 
 Input:
 
-\[
-x = \{x_1, \dots, x_T\}
-\]
+
+x = x_1, dots, x_T
+
 
 Base model:
 
-\[
-f_\theta
-\]
 
-At generation step \(t\):
+f_theta
 
-\[
-y^t = f_\theta(x, y^1, \dots, y^{t-1})
-\]
+
+At generation step t:
+
+
+y^t = f_theta(x, y^1, dots, y^t-1)
+
 
 where:
 
-\[
-y^t = (y_1^t, \dots, y_m^t)
-\]
+
+y^t = (y_1^t, dots, y_m^t)
+
 
 One generation step produces:
 
-\[
-m\]
+
+m
 
 tokens.
 
@@ -161,23 +149,23 @@ tokens.
 
 Introduce a reference model,
 
-\[
+
 f^*
-\]
+
 
 typically larger and more knowledgeable.
 
 Define:
 
-\[
-r_\beta(y^t \| x, y^{<t}) = \sum_{s=1}^m w_s^t \cdot \frac{p^*(y_s^t \| y^{<t}, y_{<s}^t)}{p_\theta(y_s^t \| y^{<t}, y_{<s}^t)}
-\]
+
+r_beta(y^t || x, y^<t) = sum_s=1^m w_s^t · fracp^*(y_s^t || y^<t, y_<s^t)p_theta(y_s^t || y^<t, y_<s^t)
+
 
 where:
 
-\[
-w_s^t = \frac{1}{\|(y^{<t}, y_{<s}^t)\|}
-\]
+
+w_s^t = (1)/(||(y^<t), y_<s^t)||
+
 
 Earlier tokens receive higher weight.
 
@@ -187,49 +175,49 @@ Earlier tokens receive higher weight.
 
 For correct tokens:
 
-\[
-p_\theta \uparrow
-\]
+
+p_theta uparrow
+
 
 and
 
-\[
-p^* \uparrow
-\]
+
+p^* uparrow
+
 
 so
 
-\[
-r_\beta \uparrow
-\]
+
+r_beta uparrow
+
 
 indicating safety.
 
 For incorrect tokens:
 
-\[
-p_\theta \uparrow
-\]
+
+p_theta uparrow
+
 
 but
 
-\[
-p^* \downarrow
-\]
+
+p^* downarrow
+
 
 so
 
-\[
-r_\beta \downarrow
-\]
+
+r_beta downarrow
+
 
 indicating danger.
 
 Core idea:
 
-\[
-\text{Low } r_\beta \Rightarrow \text{Hallucination}
-\]
+
+Low r_beta → Hallucination
+
 
 ---
 
@@ -237,21 +225,21 @@ Core idea:
 
 Acceptance probability:
 
-\[
-p(\text{accept } y^t) = \min\{1, r_\beta\}
-\]
+
+p(accept y^t) = min1, r_beta
+
 
 Threshold:
 
-\[
-\gamma^t = \gamma_0 \sum_s w_s^t
-\]
+
+gamma^t = gamma_0 sum_s w_s^t
+
 
 If:
 
-\[
-r_\beta > \gamma^t
-\]
+
+r_beta > gamma^t
+
 
 accept.
 
@@ -259,9 +247,9 @@ Otherwise reject.
 
 If:
 
-\[
-r_\beta < \gamma^t
-\]
+
+r_beta < gamma^t
+
 
 trigger revision.
 
@@ -274,20 +262,20 @@ For risky tokens, launch tree search.
 Each step:
 
 - sample Top-N candidate tokens
-- form \(N^m\) paths
+- form N^m paths
 - prune to Top-K paths by monitor score
 
 Keep the path with the highest:
 
-\[
-\operatorname{TopK}(r_\beta)
-\]
+
+operatornameTopK(r_beta)
+
 
 Finally select:
 
-\[
-\arg\max r_\beta
-\]
+
+argmax r_beta
+
 
 as the revised token sequence.
 
@@ -299,15 +287,15 @@ Prompt
 
 ↓
 
-Generate \(m\) tokens
+Generate m tokens
 
 ↓
 
-Compute \(r_\beta\)
+Compute r_beta
 
 ↓
 
-If \(r_\beta > \gamma\): accept
+If r_beta > gamma: accept
 
 otherwise:
 
@@ -337,47 +325,47 @@ Llama-2:
 
 Greedy:
 
-\[
-\text{Truth*Info} = 37.9
-\]
+
+Truth*Info = 37.9
+
 
 MD:
 
-\[
+
 44.1
-\]
+
 
 Improvement:
 
-\[
+
 +6.2
-\]
+
 
 Gemma-2:
 
 Greedy:
 
-\[
+
 43.6
-\]
+
 
 MD:
 
-\[
+
 50.2
-\]
+
 
 Improvement:
 
-\[
+
 +6.6
-\]
+
 
 Maximum Truth improvement:
 
-\[
+
 +9.2
-\]
+
 
 ---
 
@@ -387,41 +375,41 @@ Llama-3:
 
 TriviaQA:
 
-\[
-72.4 \rightarrow 80.8
-\]
+
+72.4 → 80.8
+
 
 Improvement:
 
-\[
+
 +8.4
-\]
+
 
 NQ-open:
 
-\[
-39.6 \rightarrow 47.4
-\]
+
+39.6 → 47.4
+
 
 Improvement:
 
-\[
+
 +6.8
-\]
+
 
 Gemma-2:
 
 TriviaQA:
 
-\[
-54.0 \rightarrow 64.6
-\]
+
+54.0 → 64.6
+
 
 Improvement:
 
-\[
+
 +10.6
-\]
+
 
 ---
 
@@ -429,27 +417,27 @@ Improvement:
 
 Llama-3:
 
-\[
-81.4 \rightarrow 85.2
-\]
+
+81.4 → 85.2
+
 
 Improvement:
 
-\[
+
 +3.8
-\]
+
 
 Gemma-2:
 
-\[
-60.9 \rightarrow 79.9
-\]
+
+60.9 → 79.9
+
 
 Improvement:
 
-\[
+
 +19.0
-\]
+
 
 This indicates the method does not hurt reasoning and may even improve it.
 
@@ -461,35 +449,35 @@ Latency:
 
 Greedy:
 
-\[
-19.94\ \mathrm{ms/token}
-\]
+
+19.94 ms/token
+
 
 MD:
 
-\[
-113.78\ \mathrm{ms/token}
-\]
+
+113.78 ms/token
+
 
 About:
 
-\[
-5.7\times
-\]
+
+5.7times
+
 
 Compared to:
 
 USC:
 
-\[
-12.3\times
-\]
+
+12.3times
+
 
 FSC:
 
-\[
-15.9\times
-\]
+
+15.9times
+
 
 MD is faster.
 
@@ -503,25 +491,25 @@ It only revises dangerous tokens instead of regenerating the full response.
 
 Increasing:
 
-\[
+
 N
-\]
+
 
 improves performance.
 
 But for:
 
-\[
+
 N > 6
-\]
+
 
 returns saturate.
 
 Threshold:
 
-\[
-\gamma_0
-\]
+
+gamma_0
+
 
 has limited impact, indicating the method is stable.
 
@@ -535,8 +523,8 @@ For example, TriviaQA with Llama-3:
 
 Only:
 
-\[
-17.9\%\]
+
+17.9%
 
 tokens were modified.
 
@@ -567,9 +555,9 @@ Contributions:
 
 If the correct knowledge is absent:
 
-\[
-\text{Missing knowledge} \Rightarrow \text{No correction}
-\]
+
+Missing knowledge → No correction
+
 
 Future work can combine this with external knowledge.
 
@@ -579,27 +567,27 @@ Future work can combine this with external knowledge.
 
 Problem:
 
-\[
-\text{Hallucination}
-\]
+
+Hallucination
+
 
 Observation:
 
-\[
-\text{Few critical tokens} \Rightarrow \text{Hallucination}
-\]
+
+Few critical tokens → Hallucination
+
 
 Detection:
 
-\[
-r_\beta = \sum w \frac{p^*}{p_\theta}
-\]
+
+r_beta = sum w (p^*)/(p_theta)
+
 
 Rule:
 
-\[
-r_\beta < \gamma \Rightarrow \text{Reject}
-\]
+
+r_beta < gamma → Reject
+
 
 Revision:
 
@@ -619,6 +607,6 @@ Replace token
 
 Core idea:
 
-> Do not resample the full response  
-> revise only dangerous tokens  
+> Do not resample the full response 
+> revise only dangerous tokens 
 > improve factuality and reduce cost

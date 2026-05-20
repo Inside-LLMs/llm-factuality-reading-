@@ -1,18 +1,5 @@
----
-title: "Sparse Feature Circuits: Discovering and Editing Interpretable Causal Graphs in Language Models"
-authors: Marks 等
-year: 2025
-venue: ICLR 2025
-keywords:
-  - 稀疏特征电路
-  - 因果图
-  - 可解释性编辑
-  - Attribution Patching
-  - SHIFT
-status: draft
----
-
 # Sparse Feature Circuits: Discovering and Editing Interpretable Causal Graphs in Language Models
+*ICLR 2025*
 
 ## 1. 论文要解决什么问题？
 
@@ -71,21 +58,21 @@ feature → feature → feature → prediction
 
 给定 activation：
 
-\[
-x \in \mathbb{R}^d
-\]
+
+x in mathbbR^d
+
 
 SAE 分解为：
 
-\[
-x = \hat x + \epsilon(x) = \sum_{i=1}^{d_{SAE}} f_i(x) v_i + b + \epsilon(x)
-\]
+
+x = hat x + epsilon(x) = sum_i=1^d_SAE f_i(x) v_i + b + epsilon(x)
+
 
 其中：
 
-- $f_i(x)$ 表示 feature activation
-- $v_i$ 表示 feature direction
-- $\epsilon(x)$ 表示 reconstruction error
+- f_i(x) 表示 feature activation
+- v_i 表示 feature direction
+- epsilon(x) 表示 reconstruction error
 
 作者强调误差项不丢弃，而是作为 circuit 节点。
 
@@ -95,27 +82,27 @@ x = \hat x + \epsilon(x) = \sum_{i=1}^{d_{SAE}} f_i(x) v_i + b + \epsilon(x)
 
 定义：
 
-\[
-IE(m, a, x_{clean}, x_{patch}) = m(x_{clean} \mid do(a = a_{patch})) - m(x_{clean})
-\]
 
-其中 $m$ 是 metric，例如：
+IE(m, a, x_clean, x_patch) = m(x_clean | do(a = a_patch)) - m(x_clean)
+
+
+其中 m 是 metric，例如：
 
 ```text
 log P(has) - log P(have)
 ```
 
-如果 $IE$ 上升，说明该 feature 对行为贡献大。
+如果 IE 上升，说明该 feature 对行为贡献大。
 
 ## 5. Attribution Patching Approximation
 
-真实计算 $IE$ 成本高。
+真实计算 IE 成本高。
 
 作者用 Attribution Patching 近似：
 
-\[
-\hat{IE}_{atp}(m, a) = \nabla_a m \cdot (a_{patch} - a_{clean})
-\]
+
+hat IE_atp(m, a) = nabla_a m · (a_patch - a_clean)
+
 
 优点是仅需：
 
@@ -126,19 +113,19 @@ log P(has) - log P(have)
 
 为了提升精度，进一步使用 Integrated Gradients：
 
-\[
-\hat{IE}_{ig}(m, a) = \frac{1}{N} \sum_\alpha \nabla_a m\big\|_{\alpha a_{clean} + (1-\alpha)a_{patch}} (a_{patch} - a_{clean})
-\]
 
-论文主要采用 $IE_{ig}$。
+hat IE_ig(m, a) = (1)/(N) sum_alpha nabla_a m ||_alpha a_clean + (1-alpha)a_patch (a_patch - a_clean)
+
+
+论文主要采用 IE_ig。
 
 ## 6. Sparse Feature Circuit Discovery
 
 输入：
 
-- 数据 $D$
-- 模型 $M$
-- 指标 $m$（如 has vs have）
+- 数据 D
+- 模型 M
+- 指标 m（如 has vs have）
 
 步骤：
 
@@ -150,17 +137,17 @@ log P(has) - log P(have)
 
 计算每个 feature 的
 
-\[
+
 IE(m, a)
-\]
+
 
 ### Step 3
 
-保留 $\|IE\| > T_N$ 的重要节点。
+保留 ||IE|| > T_N 的重要节点。
 
 ### Step 4
 
-计算 feature-feature edge，保留 $\|IE\| > T_E$ 的重要边。
+计算 feature-feature edge，保留 ||IE|| > T_E 的重要边。
 
 最终得到 Sparse Feature Circuit。
 
@@ -201,9 +188,9 @@ has / have
 
 定义：Circuit 保留后还能解释多少行为。
 
-\[
-Faithfulness = \frac{m(C) - m(\varnothing)}{m(M) - m(\varnothing)}
-\]
+
+Faithfulness = (m(C) - m(varnothing))/(m(M) - m(varnothing))
+
 
 理想值为 1。
 
@@ -224,9 +211,9 @@ Circuit 是否遗漏行为？
 
 通过观察：
 
-\[
-M \setminus C
-\]
+
+M setminus C
+
 
 还能保留多少能力。
 
@@ -264,11 +251,11 @@ female → nurse
 
 SHIFT 删除 gender feature 后：
 
-- Profession: $61.9 \rightarrow 88.5$
-- Gender: $87.4 \rightarrow 54.0$
-- Worst-group: $24.4 \rightarrow 76.0$
+- Profession: 61.9 → 88.5
+- Gender: 87.4 → 54.0
+- Worst-group: 24.4 → 76.0
 
-再训练后 Worst-group 达到 $89.0$，接近 Oracle。
+再训练后 Worst-group 达到 89.0，接近 Oracle。
 
 说明解释得到的 feature 真正可编辑。
 

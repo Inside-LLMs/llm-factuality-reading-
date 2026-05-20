@@ -1,17 +1,5 @@
----
-title: "In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation"
-authors: Chen 等
-year: 2024
-venue: 2024
-keywords:
-  - hallucination mitigation
-  - hidden states
-  - activation entropy
-  - constrained decoding
-status: draft
----
-
 # In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation
+*2024*
 
 ## 1. 论文要解决什么问题？
 
@@ -19,9 +7,9 @@ LLM 经常生成 factual error / hallucination。
 
 本文目标：
 
-> 不使用外部知识库  
-> 不做额外 fine-tuning  
-> 只利用模型内部 hidden states  
+> 不使用外部知识库 
+> 不做额外 fine-tuning 
+> 只利用模型内部 hidden states 
 > 在 decoding 阶段缓解 hallucination
 
 ---
@@ -52,21 +40,21 @@ LLM 经常生成 factual error / hallucination。
 
 因此：
 
-\[
-correct\ answer
-\Rightarrow
-sharp\ activation
-\Rightarrow
-low\ entropy
-\]
 
-\[
-incorrect\ answer
-\Rightarrow
-diffuse\ activation
-\Rightarrow
-high\ entropy
-\]
+correct answer
+→
+sharp activation
+→
+low entropy
+
+
+
+incorrect answer
+→
+diffuse activation
+→
+high entropy
+
 
 ---
 
@@ -74,29 +62,29 @@ high\ entropy
 
 给定输入序列：
 
-\[
-\{v_1,\dots,v_T\}
-\]
 
-第 \(l\) 层 hidden states：
+v_1,dots,v_T
 
-\[
-\{x_1^l,\dots,x_T^l\}
-\]
+
+第 l 层 hidden states：
+
+
+x_1^l,dots,x_T^l
+
 
 LM head：
 
-\[
+
 W
-\]
+
 
 原始 next-token probability：
 
-\[
-P(v_{T+1}|v_{1:T})
+
+P(v_T+1|v_1:T)
 =
-softmax(Wx_T^H)_{v_{T+1}}
-\]
+softmax(Wx_T^H)_v_T+1
+
 
 ---
 
@@ -104,17 +92,17 @@ softmax(Wx_T^H)_{v_{T+1}}
 
 作者把某个位置的 hidden state 投影到 vocabulary space。
 
-对上下文位置 \(i\) 和候选 token \(v\)，定义：
+对上下文位置 i 和候选 token v，定义：
 
-\[
+
 s(i,v)
 =
 softmax(Wx_i)_v
-\]
+
 
 含义：
 
-> 候选 token \(v\) 在上下文位置 \(i\) 的 hidden state 中被激活的程度
+> 候选 token v 在上下文位置 i 的 hidden state 中被激活的程度
 
 如果某个答案 token 被 prompt 中关键位置强激活，它更可能是事实正确答案。
 
@@ -124,31 +112,31 @@ softmax(Wx_i)_v
 
 给定 prompt：
 
-\[
-C=\{v_1,v_2,\dots,v_t\}
-\]
+
+C=v_1,v_2,dots,v_t
+
 
 候选预测 token：
 
-\[
+
 v_p
-\]
+
 
 把候选 token 对所有上下文 token 的 activation score 归一化：
 
-\[
-\tilde P(activation=i|v_p,v_{1:t})
+
+tilde P(activation=i|v_p,v_1:t)
 =
-\frac{
- e^{s(i,v_p)}
-}{
- \sum_{m=1}^{t}e^{s(m,v_p)}
-}
-\]
+frac
+ e^s(i,v_p)
+
+ sum_m=1^te^s(m,v_p)
+
+
 
 这个分布表示：
 
-> 候选 token \(v_p\) 的知识主要从 prompt 中哪些位置被激活出来
+> 候选 token v_p 的知识主要从 prompt 中哪些位置被激活出来
 
 ---
 
@@ -156,29 +144,29 @@ v_p
 
 用 entropy 衡量 in-context sharpness：
 
-\[
-E(v_p,v_{1:t})
+
+E(v_p,v_1:t)
 =
 -
-\sum_{i=1}^{t}
-\tilde P(activation=i|v_p,v_{1:t})
-\log
-\tilde P(activation=i|v_p,v_{1:t})
-\]
+sum_i=1^t
+tilde P(activation=i|v_p,v_1:t)
+log
+tilde P(activation=i|v_p,v_1:t)
+
 
 如果 activation 很集中：
 
-\[
-E(v_p,v_{1:t}) \downarrow
-\]
+
+E(v_p,v_1:t) downarrow
+
 
 说明 sharpness 高，答案更可能正确。
 
 如果 activation 很分散：
 
-\[
-E(v_p,v_{1:t}) \uparrow
-\]
+
+E(v_p,v_1:t) uparrow
+
 
 说明 sharpness 低，答案更可能 hallucinated。
 
@@ -190,24 +178,24 @@ E(v_p,v_{1:t}) \uparrow
 
 原始概率：
 
-\[
-P(v_p|v_{1:p-1})
-\]
+
+P(v_p|v_1:p-1)
+
 
 调整后：
 
-\[
-P(v_p|v_{1:p-1})
-\propto
-e^{-\lambda E(v_p,v_{1:t})}
-P(v_p|v_{1:p-1})
-\]
+
+P(v_p|v_1:p-1)
+propto
+e^-lambda E(v_p,v_1:t)
+P(v_p|v_1:p-1)
+
 
 其中：
 
-\[
-\lambda\in[0,1]
-\]
+
+lambdain[0,1]
+
 
 控制 entropy penalty 的强度。
 
@@ -217,29 +205,29 @@ P(v_p|v_{1:p-1})
 
 如果候选 token 的 contextual entropy 小：
 
-\[
-E(v_p,v_{1:t}) \downarrow
-\]
+
+E(v_p,v_1:t) downarrow
+
 
 则：
 
-\[
-e^{-\lambda E(v_p,v_{1:t})}
-\]
+
+e^-lambda E(v_p,v_1:t)
+
 
 较大，token probability 被增强。
 
 如果候选 token 的 contextual entropy 大：
 
-\[
-E(v_p,v_{1:t}) \uparrow
-\]
+
+E(v_p,v_1:t) uparrow
+
 
 则：
 
-\[
-e^{-\lambda E(v_p,v_{1:t})}
-\]
+
+e^-lambda E(v_p,v_1:t)
+
 
 较小，token probability 被压低。
 
@@ -249,15 +237,15 @@ e^{-\lambda E(v_p,v_{1:t})}
 
 计算：
 
-\[
-E(v_p,v_{1:t})
-\]
+
+E(v_p,v_1:t)
+
 
 时，作者只考虑原始 prompt tokens：
 
-\[
-v_{1:t}
-\]
+
+v_1:t
+
 
 不考虑新生成的 tokens。
 
@@ -277,38 +265,38 @@ v_{1:t}
 
 ↓
 
-对候选 token \(v_p\) 计算每个上下文位置的 activation score：
+对候选 token v_p 计算每个上下文位置的 activation score：
 
-\[
+
 s(i,v_p)
-\]
+
 
 ↓
 
 归一化得到：
 
-\[
-\tilde P(activation=i|v_p,v_{1:t})
-\]
+
+tilde P(activation=i|v_p,v_1:t)
+
 
 ↓
 
 计算 contextual entropy：
 
-\[
-E(v_p,v_{1:t})
-\]
+
+E(v_p,v_1:t)
+
 
 ↓
 
 调整 next-token probability：
 
-\[
+
 P(v_p)
-\leftarrow
-e^{-\lambda E(v_p,v_{1:t})}
+leftarrow
+e^-lambda E(v_p,v_1:t)
 P(v_p)
-\]
+
 
 ↓
 
@@ -324,21 +312,21 @@ decode 下一个 token
 
 正确答案：
 
-\[
-E \text{ 更小}
-\]
+
+E 更小
+
 
 错误答案：
 
-\[
-E \text{ 更大}
-\]
+
+E 更大
+
 
 在 26th / 28th layer 上，contextual entropy 区分 true / false answer 的 AUROC 约为：
 
-\[
-0.75 \sim 0.76
-\]
+
+0.75 sim 0.76
+
 
 说明 entropy 可以作为 hallucination alert signal。
 
@@ -350,27 +338,27 @@ E \text{ 更大}
 
 LLaMA2-7B-chat：
 
-\[
-55.8 \rightarrow 59.1
-\]
+
+55.8 → 59.1
+
 
 LLaMA2-13B-chat：
 
-\[
-57.5 \rightarrow 62.3
-\]
+
+57.5 → 62.3
+
 
 LLaMA2-70B-chat：
 
-\[
-47.1 \rightarrow 55.7
-\]
+
+47.1 → 55.7
+
 
 最大提升：
 
-\[
+
 +8.6
-\]
+
 
 ---
 
@@ -395,21 +383,21 @@ Activation Decoding 在大多数设置下提升 EM / F1。
 
 TriviaQA F1：
 
-\[
-68.4 \rightarrow 73.2
-\]
+
+68.4 → 73.2
+
 
 HotpotQA F1：
 
-\[
-25.5 \rightarrow 30.1
-\]
+
+25.5 → 30.1
+
 
 NQ F1：
 
-\[
-34.1 \rightarrow 37.8
-\]
+
+34.1 → 37.8
+
 
 ---
 
@@ -419,9 +407,9 @@ NQ F1：
 
 因为：
 
-\[
-E(v_p,v_{1:t})
-\]
+
+E(v_p,v_1:t)
+
 
 只依赖 prompt，不依赖之后生成的 token。
 
@@ -429,9 +417,9 @@ E(v_p,v_{1:t})
 
 在 LLaMA-2 中：
 
-\[
+
 |V|=32000
-\]
+
 
 推理时直接查表即可。
 
@@ -439,9 +427,9 @@ E(v_p,v_{1:t})
 
 相比 greedy decoding，推理时间增加约：
 
-\[
-23.4\%
-\]
+
+23.4%
+
 
 ---
 
@@ -481,34 +469,34 @@ E(v_p,v_{1:t})
 
 问题：
 
-\[
+
 LLM hallucination
-\]
+
 
 核心观察：
 
-\[
-correct\ token
-\Rightarrow
-sharper\ in-context\ activation
-\Rightarrow
-lower\ contextual\ entropy
-\]
+
+correct token
+→
+sharper in-context activation
+→
+lower contextual entropy
+
 
 关键指标：
 
-\[
-E(v_p,v_{1:t})
-\]
+
+E(v_p,v_1:t)
+
 
 decoding 公式：
 
-\[
-P(v_p|v_{1:p-1})
-\propto
-e^{-\lambda E(v_p,v_{1:t})}
-P(v_p|v_{1:p-1})
-\]
+
+P(v_p|v_1:p-1)
+propto
+e^-lambda E(v_p,v_1:t)
+P(v_p|v_1:p-1)
+
 
 效果：
 
@@ -516,6 +504,6 @@ P(v_p|v_{1:p-1})
 
 优势：
 
-> 不需要 fine-tuning  
-> 不需要外部知识库  
+> 不需要 fine-tuning 
+> 不需要外部知识库 
 > 不需要额外模型

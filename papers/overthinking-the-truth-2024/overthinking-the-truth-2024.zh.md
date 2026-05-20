@@ -1,17 +1,5 @@
----
-title: "OVERTHINKING THE TRUTH：理解语言模型如何处理错误演示"
-authors: Halawi 等
-year: 2024
-venue: ICLR 2024
-keywords:
-  - 机制可解释性
-  - 错误演示
-  - overthinking
-  - induction heads
-status: draft
----
-
 # OVERTHINKING THE TRUTH：理解语言模型如何处理错误演示
+*ICLR 2024*
 
 ## 1. 论文要解决什么问题？
 
@@ -19,17 +7,17 @@ LLM 可以通过 few-shot demonstrations 学习任务。
 
 但问题是模型不仅学习任务，还会学习：
 
-\[
+
 错误标签
-\]
 
-\[
+
+
 虚假模式
-\]
 
-\[
+
+
 有害示例
-\]
+
 
 例如错误 few-shot 示例：
 
@@ -41,8 +29,8 @@ Positive → Negative
 
 作者问题：
 
-> 为什么模型会模仿错误演示？  
-> 错误 imitation 在 Transformer 哪些层产生？  
+> 为什么模型会模仿错误演示？ 
+> 错误 imitation 在 Transformer 哪些层产生？ 
 > 哪些组件导致这个现象？
 
 ---
@@ -55,15 +43,15 @@ Positive → Negative
 
 早层：
 
-\[
-正确演示 \approx 错误演示
-\]
+
+正确演示 approx 错误演示
+
 
 后层：
 
-\[
-正确 \neq 错误
-\]
+
+正确 ≠ 错误
+
 
 出现明显分叉。
 
@@ -83,23 +71,23 @@ Positive → Negative
 
 few-shot 分类输入：
 
-\[
+
 (x_i, y_i)
-\]
+
 
 真实标签：
 
-\[
-y_i = \text{class}(x_i)
-\]
+
+y_i = class(x_i)
+
 
 作者通过置换标签构造错误 prompt：
 
-\[
-y_i = \sigma(\text{class}(x_i))
-\]
 
-其中 \(\sigma\) 是循环置换。
+y_i = sigma(class(x_i))
+
+
+其中 sigma 是循环置换。
 
 例如：
 
@@ -116,31 +104,31 @@ negative → positive
 
 作者分析每层到底预测什么。
 
-定义 Transformer 第 \(\ell\) 层隐藏状态：
+定义 Transformer 第 ell 层隐藏状态：
 
-\[
-h_\ell^{(n)}
-\]
+
+h_ell^(n)
+
 
 最终输出 logits：
 
-\[
-\text{logits} = W_U \cdot \text{LayerNorm}(h_L^{(n)})
-\]
+
+logits = W_U · LayerNorm(h_L^(n))
+
 
 对中间层使用 Logit Lens：
 
-\[
-\text{logits}_\ell = W_U \cdot \text{LayerNorm}(h_\ell^{(n)})
-\]
+
+logits_ell = W_U · LayerNorm(h_ell^(n))
+
 
 得到：
 
-\[
-p_\ell(t_{n+1} \mid t_{1:n})
-\]
 
-即第 \(\ell\) 层认为下一个 token 是什么。
+p_ell(t_n+1 | t_1:n)
+
+
+即第 ell 层认为下一个 token 是什么。
 
 Logit Lens 可以观察中间推理过程，无需额外探针。
 
@@ -150,26 +138,26 @@ Logit Lens 可以观察中间推理过程，无需额外探针。
 
 作者发现正确和错误演示在早期层表现相似：
 
-\[
-\text{Acc}_{\text{correct}} \approx \text{Acc}_{\text{incorrect}}
-\]
+
+Acc_correct approx Acc_incorrect
+
 
 到某层后出现分叉：
 
-\[
-\text{Acc}_{\text{correct}} \uparrow
-\]
 
-\[
-\text{Acc}_{\text{incorrect}} \downarrow
-\]
+Acc_correct uparrow
+
+
+
+Acc_incorrect downarrow
+
 
 作者称其为 # Critical Layer，错模仿开始形成的层。
 
 例如：
 
-- GPT-J：约 \(13\sim14\)
-- Llama2-7B：约 \(13\sim17\)
+- GPT-J：约 13sim14
+- Llama2-7B：约 13sim17
 
 ---
 
@@ -179,19 +167,19 @@ Logit Lens 可以观察中间推理过程，无需额外探针。
 
 即：
 
-\[
-\text{Early Exit} > \text{Full Model}
-\]
+
+Early Exit > Full Model
+
 
 作者定义 Overthinking 为：
 
-存在某个中间层 \(k < L\) 使得：
+存在某个中间层 k < L 使得：
 
-\[
+
 p_k > p_L
-\]
 
-例如 GPT-J，仅运行层 \(1\sim16\) 优于完整 \(28\) 层。
+
+例如 GPT-J，仅运行层 1sim16 优于完整 28 层。
 
 ---
 
@@ -205,23 +193,23 @@ p_k > p_L
 
 结果表明，随着错误演示增加，模型越来越输出：
 
-\[
-\sigma(\text{class}(x))
-\]
+
+sigma(class(x))
+
 
 即错误标签。
 
 说明：
 
-\[
-错误 prompt \Rightarrow 错误 imitation
-\]
+
+错误 prompt → 错误 imitation
+
 
 而不是：
 
-\[
-错误 prompt \Rightarrow 随机
-\]
+
+错误 prompt → 随机
+
 
 ---
 
@@ -237,9 +225,9 @@ p_k > p_L
 
 这表明：
 
-\[
-Late Attention \text{ 主导 Overthinking}
-\]
+
+Late Attention 主导 Overthinking
+
 
 而 MLP 影响较小。
 
@@ -273,9 +261,9 @@ Late Attention \text{ 主导 Overthinking}
 
 即：
 
-\[
-Attend \rightarrow Copy \rightarrow Promote
-\]
+
+Attend → Copy → Promote
+
 
 ---
 
@@ -285,23 +273,23 @@ Attend \rightarrow Copy \rightarrow Promote
 
 定义：
 
-\[
-PM_h = \sum_i Att_h(x, y_i) 1_{\{\text{class}(x)=\text{class}(x_i)\}}
-\]
+
+PM_h = sum_i Att_h(x, y_i) 1_class(x)=class(x_i)
+
 
 减去对其他类别的注意力。
 
 完整定义：
 
-\[
-PM_h = \sum Att_h(x, y_i) 1_{\{same\}} - \frac{1}{k-1} \sum Att_h(x, y_i) 1_{\{different\}}
-\]
+
+PM_h = sum Att_h(x, y_i) 1_same - (1)/(k-1) sum Att_h(x, y_i) 1_different
+
 
 若：
 
-\[
-PM_h \uparrow
-\]
+
+PM_h uparrow
+
 
 说明该 head 更可能复制错误标签。
 
@@ -313,9 +301,9 @@ PM_h \uparrow
 
 在 14 个数据集上，错误演示带来的准确率差距减少了：
 
-\[
-38.9\%
-\]
+
+38.9%
+
 
 而正确演示几乎不受影响。
 
@@ -329,27 +317,27 @@ GPT-J 在错误演示下：
 
 完整模型：
 
-\[
+
 37.4
-\]
+
 
 去掉后层：
 
-\[
+
 47.7
-\]
+
 
 提升：
 
-\[
+
 +10.3
-\]
+
 
 GPT2-XL：
 
-\[
-42.0 \rightarrow 44.6
-\]
+
+42.0 → 44.6
+
 
 Llama2 也存在 overthinking，说明这不是小模型现象。
 
@@ -359,15 +347,15 @@ Llama2 也存在 overthinking，说明这不是小模型现象。
 
 删除 top heads 后，accuracy gap 下降：
 
-\[
-38.98\%
-\]
+
+38.98%
+
 
 随机删除 heads 仅：
 
-\[
-3.97\%
-\]
+
+3.97%
+
 
 说明找到的 heads 具有因果作用。
 
@@ -402,23 +390,23 @@ Llama2 也存在 overthinking，说明这不是小模型现象。
 
 问题：
 
-\[
-错误演示 \Rightarrow 幻觉
-\]
+
+错误演示 → 幻觉
+
 
 发现：
 
 早层：
 
-\[
-正确 \approx 错误
-\]
+
+正确 approx 错误
+
 
 后层：
 
-\[
+
 分叉
-\]
+
 
 定义：
 
@@ -426,21 +414,21 @@ Llama2 也存在 overthinking，说明这不是小模型现象。
 
 即：
 
-\[
+
 Early Exit > Full Model
-\]
+
 
 原因：
 
-\[
+
 False Induction Heads
-\]
+
 
 机制：
 
-\[
-Attend \rightarrow Copy \rightarrow Promote
-\]
+
+Attend → Copy → Promote
+
 
 贡献：
 

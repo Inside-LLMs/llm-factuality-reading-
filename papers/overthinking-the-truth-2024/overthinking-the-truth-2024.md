@@ -1,17 +1,5 @@
----
-title: "OVERTHINKING THE TRUTH: UNDERSTANDING HOW LANGUAGE MODELS PROCESS FALSE DEMONSTRATIONS"
-authors: Halawi et al.
-year: 2024
-venue: ICLR 2024
-keywords:
-  - mechanistic interpretability
-  - false demonstrations
-  - overthinking
-  - induction heads
-status: draft
----
-
 # OVERTHINKING THE TRUTH: Understanding How Language Models Process False Demonstrations
+*ICLR 2024*
 
 ## 1. What problem does the paper solve?
 
@@ -19,17 +7,17 @@ LLMs can learn tasks from few-shot demonstrations.
 
 But the problem is that the model learns not only the task, but also:
 
-\[
-\text{Wrong labels}
-\]
 
-\[
-\text{False patterns}
-\]
+Wrong labels
 
-\[
-\text{Harmful demonstrations}
-\]
+
+
+False patterns
+
+
+
+Harmful demonstrations
+
 
 For example, incorrect few-shot examples like:
 
@@ -41,8 +29,8 @@ cause the model to copy the wrong label.
 
 The authors ask:
 
-> Why does the model imitate false demonstrations?  
-> In which Transformer layers does the wrong imitation arise?  
+> Why does the model imitate false demonstrations? 
+> In which Transformer layers does the wrong imitation arise? 
 > Which components drive this behavior?
 
 ---
@@ -55,15 +43,15 @@ That is:
 
 Early layers:
 
-\[
-\text{Correct demos} \approx \text{Incorrect demos}
-\]
+
+Correct demos approx Incorrect demos
+
 
 Later layers:
 
-\[
-\text{Correct} \neq \text{Incorrect}
-\]
+
+Correct ≠ Incorrect
+
 
 A clear bifurcation appears.
 
@@ -83,23 +71,23 @@ Early exit can be more correct.
 
 Few-shot classification uses examples:
 
-\[
+
 (x_i, y_i)
-\]
+
 
 with true labels:
 
-\[
-y_i = \text{class}(x_i)
-\]
+
+y_i = class(x_i)
+
 
 The authors create false prompts by permuting labels:
 
-\[
-y_i = \sigma(\text{class}(x_i))
-\]
 
-where \(\sigma\) is a cyclic permutation.
+y_i = sigma(class(x_i))
+
+
+where sigma is a cyclic permutation.
 
 For example:
 
@@ -116,31 +104,31 @@ This constructs false demonstrations and tests whether the model copies the wron
 
 The authors analyze what each layer predicts.
 
-Define Transformer layer \(\ell\) hidden state:
+Define Transformer layer ell hidden state:
 
-\[
-h_\ell^{(n)}
-\]
+
+h_ell^(n)
+
 
 Final output logits:
 
-\[
-\text{logits} = W_U \cdot \text{LayerNorm}(h_L^{(n)})
-\]
+
+logits = W_U · LayerNorm(h_L^(n))
+
 
 For intermediate layers, Logit Lens gives:
 
-\[
-\text{logits}_\ell = W_U \cdot \text{LayerNorm}(h_\ell^{(n)})
-\]
+
+logits_ell = W_U · LayerNorm(h_ell^(n))
+
 
 and the implied probability:
 
-\[
-p_\ell(t_{n+1} \mid t_{1:n})
-\]
 
-This shows what layer \(\ell\) thinks the next token should be.
+p_ell(t_n+1 | t_1:n)
+
+
+This shows what layer ell thinks the next token should be.
 
 The Logit Lens allows observing intermediate reasoning without extra probes.
 
@@ -150,26 +138,26 @@ The Logit Lens allows observing intermediate reasoning without extra probes.
 
 The authors find that correct and incorrect demonstrations behave similarly in early layers:
 
-\[
-\text{Acc}_{\text{correct}} \approx \text{Acc}_{\text{incorrect}}
-\]
+
+Acc_correct approx Acc_incorrect
+
 
 Then at a certain layer they diverge:
 
-\[
-\text{Acc}_{\text{correct}} \uparrow
-\]
 
-\[
-\text{Acc}_{\text{incorrect}} \downarrow
-\]
+Acc_correct uparrow
+
+
+
+Acc_incorrect downarrow
+
 
 They call this the # Critical Layer — the layer where wrong imitation starts forming.
 
 Examples:
 
-- GPT-J: critical layer around \(13\sim14\)
-- Llama2-7B: critical layer around \(13\sim17\)
+- GPT-J: critical layer around 13sim14
+- Llama2-7B: critical layer around 13sim17
 
 ---
 
@@ -179,21 +167,21 @@ Under false demonstrations, the full model accuracy drops, while early exit accu
 
 That is:
 
-\[
-\text{Early Exit} > \text{Full Model}
-\]
+
+Early Exit > Full Model
+
 
 The authors define Overthinking as cases where:
 
-\[
-p_k > p_L
-\]
 
-for some intermediate layer \(k < L\).
+p_k > p_L
+
+
+for some intermediate layer k < L.
 
 Example:
 
-GPT-J: running only layers \(1\sim16\) beats the full \(28\) layers.
+GPT-J: running only layers 1sim16 beats the full 28 layers.
 
 ---
 
@@ -207,23 +195,23 @@ The authors define a Permuted Score to measure whether the model truly copies th
 
 They find that as false demonstrations increase, the model increasingly outputs:
 
-\[
-\sigma(\text{class}(x))
-\]
+
+sigma(class(x))
+
 
 i.e. the wrong label.
 
 This means:
 
-\[
-\text{Wrong prompt} \Rightarrow \text{Wrong imitation}
-\]
+
+Wrong prompt → Wrong imitation
+
 
 not:
 
-\[
-\text{Wrong prompt} \Rightarrow \text{Random}
-\]
+
+Wrong prompt → Random
+
 
 ---
 
@@ -239,9 +227,9 @@ They find removing late attention heads has almost the same effect as removing t
 
 This suggests:
 
-\[
-\text{Late Attention} \text{ dominates Overthinking}
-\]
+
+Late Attention dominates Overthinking
+
 
 while MLP has smaller impact.
 
@@ -275,9 +263,9 @@ Promote the wrong label probability.
 
 So:
 
-\[
-\text{Attend} \rightarrow \text{Copy} \rightarrow \text{Promote}
-\]
+
+Attend → Copy → Promote
+
 
 ---
 
@@ -287,23 +275,23 @@ The authors define a score that measures whether a head attends to same-class wr
 
 Define:
 
-\[
-PM_h = \sum_i Att_h(x, y_i) 1_{\{\text{class}(x) = \text{class}(x_i)\}}
-\]
+
+PM_h = sum_i Att_h(x, y_i) 1_class(x) = class(x_i)
+
 
 minus attention to other classes.
 
 Full definition:
 
-\[
-PM_h = \sum Att_h(x, y_i) 1_{\{same\}} - \frac{1}{k-1} \sum Att_h(x, y_i) 1_{\{different\}}
-\]
+
+PM_h = sum Att_h(x, y_i) 1_same - (1)/(k-1) sum Att_h(x, y_i) 1_different
+
 
 If:
 
-\[
-PM_h \uparrow
-\]
+
+PM_h uparrow
+
 
 then the head is more likely to copy the wrong label.
 
@@ -315,9 +303,9 @@ The authors identify the top 5 heads by PM score and delete them.
 
 Across 14 datasets, the accuracy gap caused by false demonstrations is reduced by:
 
-\[
-38.9\% 
-\]
+
+38.9% 
+
 
 while correct demonstrations are almost unaffected.
 
@@ -331,27 +319,27 @@ GPT-J under false demonstrations:
 
 Full model:
 
-\[
+
 37.4
-\]
+
 
 with late layers removed:
 
-\[
+
 47.7
-\]
+
 
 Improvement:
 
-\[
+
 +10.3
-\]
+
 
 GPT2-XL:
 
-\[
-42.0 \rightarrow 44.6
-\]
+
+42.0 → 44.6
+
 
 Llama2 also shows overthinking, indicating this is not a small-model artifact.
 
@@ -361,15 +349,15 @@ Llama2 also shows overthinking, indicating this is not a small-model artifact.
 
 Deleting top heads reduces the accuracy gap by:
 
-\[
-38.98\%
-\]
+
+38.98%
+
 
 Random head deletion reduces it by only:
 
-\[
-3.97\%
-\]
+
+3.97%
+
 
 This indicates the identified heads have causal effect.
 
@@ -404,23 +392,23 @@ Also, experiments are mainly based on few-shot classification and have not been 
 
 Problem:
 
-\[
-\text{False demonstrations} \Rightarrow \text{Hallucination}
-\]
+
+False demonstrations → Hallucination
+
 
 Findings:
 
 Early layers:
 
-\[
-\text{Correct} \approx \text{Incorrect}
-\]
+
+Correct approx Incorrect
+
 
 Late layers:
 
-\[
-\text{Divergence}
-\]
+
+Divergence
+
 
 Definition:
 
@@ -428,21 +416,21 @@ Definition:
 
 Meaning:
 
-\[
-\text{Early Exit} > \text{Full Model}
-\]
+
+Early Exit > Full Model
+
 
 Cause:
 
-\[
-\text{False Induction Heads}
-\]
+
+False Induction Heads
+
 
 Mechanism:
 
-\[
-\text{Attend} \rightarrow \text{Copy} \rightarrow \text{Promote}
-\]
+
+Attend → Copy → Promote
+
 
 Contribution:
 
