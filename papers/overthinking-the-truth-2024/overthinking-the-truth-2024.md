@@ -1,6 +1,8 @@
 # OVERTHINKING THE TRUTH: Understanding How Language Models Process False Demonstrations
 *ICLR 2024*
 
+**Alias:** 想太多会错
+
 ## 1. What problem does the paper solve?
 
 LLMs can learn tasks from few-shot demonstrations.

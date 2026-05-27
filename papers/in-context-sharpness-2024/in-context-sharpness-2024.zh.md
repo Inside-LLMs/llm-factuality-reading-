@@ -1,6 +1,8 @@
 # In-Context Sharpness as Alerts：一种从内部表示视角缓解幻觉的方法
 *2024*
 
+**别名：** 尖激活预警
+
 ## 1. 论文要解决什么问题？
 
 LLM 经常生成 factual error / hallucination。

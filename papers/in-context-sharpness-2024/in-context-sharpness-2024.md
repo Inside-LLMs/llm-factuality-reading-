@@ -1,6 +1,8 @@
 # In-Context Sharpness as Alerts: An Inner Representation Perspective for Hallucination Mitigation
 *2024*
 
+**Alias:** 尖激活预警
+
 ## 1. 论文要解决什么问题？
 
 LLM 经常生成 factual error / hallucination。

@@ -1,6 +1,8 @@
 # OVERTHINKING THE TRUTH：理解语言模型如何处理错误演示
 *ICLR 2024*
 
+**别名：** 想太多会错
+
 ## 1. 论文要解决什么问题？
 
 LLM 可以通过 few-shot demonstrations 学习任务。
